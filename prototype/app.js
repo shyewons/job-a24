@@ -4,11 +4,33 @@
   const jobs = window.DEMO_JOBS;
   const session = window.JobExplorer.createSession(jobs.length);
   const selected = new Set();
-  let busy = false, drag = null, toastTimer, suppressClickUntil = 0;
+  let busy = false, exiting = false, drag = null, toastTimer, nextTimer, hintTimer, suppressClickUntil = 0;
   const motion = $('card-motion'), card = $('card'), handle = $('handle');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const duration = () => reduced.matches ? 0 : 360;
   const text = (id, value) => { $(id).textContent = value; };
+
+  function cancelHandleHint() {
+    clearTimeout(hintTimer);
+    handle.classList.remove('handle-hint');
+  }
+  function scheduleHandleHint() {
+    cancelHandleHint();
+    if (reduced.matches) return;
+    const index = session.snapshot().index;
+    hintTimer = setTimeout(() => {
+      const current = session.snapshot();
+      if (busy || drag || reduced.matches || document.hidden || $('info-dialog').open || current.face !== 'front' || current.index !== index) return;
+      handle.classList.add('handle-hint');
+    }, 3000);
+  }
+  motion.addEventListener('pointerdown', cancelHandleHint, { capture: true });
+  motion.addEventListener('keydown', cancelHandleHint, { capture: true });
+  handle.addEventListener('animationend', event => {
+    if (event.animationName === 'handle-nudge') cancelHandleHint();
+  });
+  reduced.addEventListener('change', cancelHandleHint);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) cancelHandleHint(); });
 
   function toast(message) {
     clearTimeout(toastTimer); text('toast', message); $('toast').classList.add('visible');
@@ -28,28 +50,38 @@
     text('selection-hint', !selected.size ? '사유를 1개 이상 선택해 주세요.' : !valid ? '기타 사유를 짧게 입력해 주세요.' : `${selected.size}개 선택했어요. 완료하면 다음 공고로 넘어가요.`);
   }
   function setFace(face, focus = false) {
-    const back = face === 'back';
-    card.dataset.face = back ? 'back' : 'front';
+    const back = face === 'back', applied = face === 'applied', front = face === 'front';
+    card.dataset.face = face;
     // Move focus out before hiding the currently focused face from assistive technology.
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
-    $('card-front').inert = back;
-    $('card-front').setAttribute('aria-hidden', String(back));
+    $('card-front').inert = !front;
+    $('card-front').setAttribute('aria-hidden', String(!front));
     $('card-back').inert = !back;
+    $('card-back').hidden = applied;
     $('card-back').setAttribute('aria-hidden', String(!back));
-    handle.inert = back;
-    handle.classList.toggle('feedback-open', back);
-    text('gesture-hint', back ? '사유를 선택한 뒤 완료해 주세요. 공고는 아직 넘어가지 않았어요.' : '손잡이를 위아래로 움직여 보세요');
-    if (!back) {
-      const br = document.createElement('br'), hint = document.createElement('span');
-      hint.textContent = '버튼을 눌러도 같은 동작을 할 수 있어요'; $('gesture-hint').append(br, hint);
+    $('card-success').hidden = !applied;
+    $('card-success').inert = !applied;
+    $('card-success').setAttribute('aria-hidden', String(!applied));
+    handle.inert = !front;
+    handle.classList.toggle('feedback-open', !front);
+    text('gesture-hint', applied ? '마음에 드는 일에 플러팅을 보냈어요.' : back ? '사유를 선택한 뒤 완료해 주세요. 공고는 아직 넘어가지 않았어요.' : '');
+    if (front) {
+      const hint = document.createElement('span');
+      hint.textContent = '버튼을 눌러도 같은 동작을 할 수 있어요'; $('gesture-hint').append(hint);
     }
-    if (focus) (back ? $('feedback-title') : $('push-button')).focus({ preventScroll: true });
+    if (focus) (applied ? $('applied-title') : back ? $('feedback-title') : $('push-button')).focus({ preventScroll: true });
   }
-  function render() {
-    const s = session.snapshot(), done = s.face === 'done';
+  function updateCounts() {
+    const s = session.snapshot();
     text('remaining', `남은 공고 ${s.remaining}개`);
     const applied = s.decisions.filter(d => d.type === 'applied').length;
     text('applied-count', applied); $('applied-count').hidden = applied === 0;
+    return applied;
+  }
+  function render() {
+    cancelHandleHint();
+    const s = session.snapshot(), done = s.face === 'done';
+    const applied = updateCounts();
     $('explorer').hidden = done; $('complete').hidden = !done;
     document.querySelector('.stack-one').hidden = s.remaining < 2;
     document.querySelector('.stack-two').hidden = s.remaining < 3;
@@ -63,10 +95,11 @@
     const job = jobs[s.index];
     for (const [id, key] of Object.entries({ 'company-name': 'company', 'company-industry': 'industry', 'job-title': 'title', salary: 'salary', location: 'location', hours: 'hours', career: 'career', deadline: 'deadline' })) text(id, job[key]);
     $('tags').replaceChildren(...job.tags.map(tag => { const el = document.createElement('span'); el.className = 'tag'; el.textContent = '#' + tag; return el; }));
-    resetFeedback(); setFace('front');
+    resetFeedback(); setFace('front'); scheduleHandleHint();
   }
   function openFeedback() {
     if (busy || !session.openFeedback()) return;
+    cancelHandleHint();
     resetFeedback(); setFace('back', true);
   }
   function cancelFeedback() {
@@ -80,19 +113,33 @@
     const s = session.snapshot();
     const ok = type === 'applied' ? session.apply(s.index) : session.reject(s.index, [...selected], $('other-detail').value);
     if (!ok) return;
-    busy = true; motion.inert = true; updateSelection();
-    motion.classList.add(type === 'applied' ? 'leaving-down' : 'leaving-up');
-    toast(type === 'applied' ? '플러팅을 날렸습니다' : '피드백을 남겼습니다');
+    cancelHandleHint();
+    busy = true; updateSelection(); updateCounts();
+    if (type === 'applied') {
+      // Show the confirmation on a real back face before retiring the card.
+      clearTimeout(toastTimer); $('toast').classList.remove('visible');
+      resetFeedback(); setFace('applied', true);
+      text('next-job', session.snapshot().face === 'done' ? '탐색 결과 보기' : '다음 공고 보기');
+      nextTimer = setTimeout(nextJob, reduced.matches ? 1600 : 2200);
+    } else {
+      toast('피드백을 남겼습니다'); nextJob();
+    }
+  }
+  function nextJob() {
+    if (!busy || exiting) return;
+    exiting = true; clearTimeout(nextTimer); motion.inert = true;
+    motion.classList.add('leaving-up');
     setTimeout(() => {
       // Reset the back while invisible so the new job never animates through stale feedback.
       card.style.transition = 'none'; render();
       motion.classList.remove('leaving-down', 'leaving-up'); motion.classList.add('entering');
       void card.offsetWidth; card.style.transition = '';
-      busy = false; motion.inert = false; updateSelection();
+      busy = false; exiting = false; motion.inert = false; updateSelection();
       if (session.snapshot().face !== 'done') $('push-button').focus({ preventScroll: true });
       setTimeout(() => motion.classList.remove('entering'), 360);
     }, duration());
   }
+  $('next-job').addEventListener('click', nextJob);
   $('push-button').addEventListener('click', () => { if (performance.now() > suppressClickUntil) openFeedback(); });
   $('pull-button').addEventListener('click', () => { if (performance.now() > suppressClickUntil) advance('applied'); });
   $('grip').addEventListener('keydown', e => {
@@ -153,11 +200,12 @@
 
   function openDialog(title, nodes) {
     if (busy) return;
+    cancelHandleHint();
     text('dialog-title', title); $('dialog-content').replaceChildren(...nodes); $('info-dialog').showModal();
   }
   function paragraph(value, className = '') { const p = document.createElement('p'); p.textContent = value; p.className = className; return p; }
   function help() {
-    openDialog('작은 움직임으로, 새로운 시작', [paragraph('↓ 아래로 당기면 즉시 지원하고 “플러팅을 날렸습니다” 안내가 나타나요.'), paragraph('↑ 위로 밀면 카드가 뒤집혀요. 뒷면에서 거절 사유를 클릭하고 완료하면 다음 공고로 넘어가요.'), paragraph('손잡이 위·아래 버튼으로도 조작할 수 있어요. 키보드는 Tab으로 이동하고 Enter로 선택하세요. 손잡이에서는 ↑ / ↓ 키도 사용할 수 있어요.'), paragraph('이 시안의 공고는 가상 데이터입니다. 실제 지원은 전송되지 않으며 새로고침하면 체험 기록이 초기화됩니다.', 'dialog-note')]);
+    openDialog('작은 움직임으로, 새로운 시작', [paragraph('↓ 아래로 당기면 아래에서 위로 뒤집힌 뒷면에 “플러팅을 날렸습니다”가 나타나요. 잠시 후 다음 공고로 이동해요.'), paragraph('↑ 위로 밀면 위에서 아래로 카드가 뒤집혀요. 뒷면에서 거절 사유를 클릭하고 완료하면 다음 공고로 넘어가요.'), paragraph('손잡이 위·아래 버튼으로도 조작할 수 있어요. 키보드는 Tab으로 이동하고 Enter로 선택하세요. 손잡이에서는 ↑ / ↓ 키도 사용할 수 있어요.'), paragraph('이 시안의 공고는 가상 데이터입니다. 실제 지원은 전송되지 않으며 새로고침하면 체험 기록이 초기화됩니다.', 'dialog-note')]);
   }
   $('help-button').addEventListener('click', help); $('back-button').addEventListener('click', help);
   $('close-dialog').addEventListener('click', () => $('info-dialog').close());

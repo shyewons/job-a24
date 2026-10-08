@@ -1,0 +1,12 @@
+{
+    "overrides": [
+        {
+            "files": ["*.html", "*.css"],
+            "options": {
+                "tabWidth": 4,
+                "useTabs": false,
+                "printWidth": 100
+            }
+        }
+    ]
+}

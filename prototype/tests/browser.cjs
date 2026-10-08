@@ -42,13 +42,18 @@ const appPath = path.join(__dirname, '../index.html');
     await page.locator('#other-detail').fill('주말 근무가 어려워요');
     await page.locator('#confirm-reject').click(); await wait(); await count(5);
     await drag(90); await count(4);
-    assert.equal(await page.locator('#toast').innerText(), '플러팅을 날렸습니다');
-    await page.locator('#pull-button').dblclick({ delay: 30 }); await wait(); await count(3);
+    assert.equal(await page.locator('#card').getAttribute('data-face'), 'applied');
+    assert.equal(await page.locator('#applied-title').innerText(), '플러팅을 날렸습니다');
+    await page.locator('#next-job').click(); await wait();
+    // Two overlapping application intents still consume only the current job.
+    await page.locator('#pull-button').focus(); await page.keyboard.press('Enter');
+    await page.keyboard.press('ArrowDown'); await wait(); await count(3);
+    await page.locator('#next-job').click(); await wait();
     await page.locator('#detail-button').click();
     assert.equal(await page.locator('#info-dialog').isVisible(), true);
     assert.equal(await page.locator('#info-dialog').getAttribute('aria-labelledby'), 'dialog-title', 'Dialog must expose its visible title to assistive technology');
     await page.keyboard.press('Escape');
-    for (let i = 0; i < 3; i++) { await page.locator('#pull-button').click(); await wait(); }
+    for (let i = 0; i < 3; i++) { await page.locator('#pull-button').click(); await wait(); await page.locator('#next-job').click(); await wait(); }
     await count(0);
     assert.equal(await page.locator('#complete').isVisible(), true);
     await page.locator('#restart').click(); await wait(); await count(6);
@@ -69,7 +74,7 @@ const appPath = path.join(__dirname, '../index.html');
     await page.locator('#cancel-feedback').click(); await wait();
     await page.locator('#pull-button').click(); await wait(); await count(5);
     assert.deepEqual(errors, []);
-    console.log('PASS: mouse gestures, mandatory feedback, other details, cancellation, apply toast, double input, details, completion, restart, keyboard, responsive layout, reduced motion; no page errors');
+    console.log('PASS: mouse gestures, mandatory feedback, other details, cancellation, application back face, double input, details, completion, restart, keyboard, responsive layout, reduced motion; no page errors');
     const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     const tp = await touch.newPage(); await tp.goto(pathToFileURL(appPath).href);
     const cdp = await touch.newCDPSession(tp);

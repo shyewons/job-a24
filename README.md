@@ -6,8 +6,8 @@
 
 `prototype/index.html`을 Edge 또는 Chrome으로 열면 바로 체험할 수 있습니다. 별도의 설치나 빌드는 필요하지 않습니다.
 
-- 아래로 당기기: 지원 처리 후 **플러팅을 날렸습니다** 표시
-- 위로 밀기: 카드를 뒤집고 뒷면에서 거절 사유 선택
+- 아래로 당기기: 아래에서 위로 뒤집힌 뒷면에 **플러팅을 날렸습니다** 표시 후 다음 공고 이동
+- 위로 밀기: 위에서 아래로 뒤집힌 뒷면에서 거절 사유 선택
 - 거절 사유는 필수이며, 확정 후 다음 공고로 이동
 - 상단 페이지명과 남은 공고 수, 마지막 공고 완료 화면 제공
 
@@ -27,6 +27,8 @@
 ```sh
 node --test prototype/tests/state.test.cjs
 node prototype/tests/browser.cjs
+node prototype/tests/flip.cjs
+node prototype/tests/card-layout.cjs
 ```
 
 브라우저 검증은 Playwright와 Edge가 필요합니다. 다른 개발 환경에서는 `PLAYWRIGHT_PATH`를 설치된 Playwright 패키지 경로로 지정합니다. 자세한 실행 방법과 시안 범위는 [prototype/README.md](prototype/README.md)를 참고하세요.
