@@ -1,0 +1,15 @@
+# Local previews and temporary PDF/debug artifacts
+tmp/
+node_modules/
+*.log
+*.pid
+.DS_Store
+Thumbs.db
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.codex/
+.agents/
+.aws/
