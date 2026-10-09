@@ -1,0 +1,463 @@
+/* 기존 프로토타입의 팔레트와 18/14/12px 타이포그래피를 공유합니다. */
+.feedback-main {
+    padding-top: 20px;
+    padding-bottom: 28px;
+    gap: 28px;
+}
+.coupon-card {
+    background: var(--color-white);
+    border-radius: 16px;
+    padding: 20px var(--space-inline);
+}
+.coupon-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.coupon-top h2 {
+    font-size: var(--font-body);
+    margin: 0;
+    font-weight: 700;
+}
+.coupon-help {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--color-text-muted);
+}
+.coupon-help svg {
+    width: 18px;
+    height: 18px;
+}
+.coupon-help:hover {
+    background: var(--color-surface);
+}
+.coupon-balance {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-brand-strong);
+    font-size: var(--font-title);
+}
+.coupon-balance svg {
+    width: 22px;
+    height: 22px;
+}
+.coupon-message {
+    font-size: var(--font-body);
+    line-height: 1.7;
+    margin: 18px 0 16px;
+}
+.coupon-message strong {
+    color: var(--color-brand-strong);
+}
+.coupon-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.coupon-progress {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+    flex: 1;
+}
+.coupon-progress span {
+    height: 8px;
+    border-radius: 3px;
+    background: var(--color-surface-muted);
+}
+.coupon-progress span:nth-child(-n + 7) {
+    background: var(--color-brand);
+}
+.coupon-progress-label {
+    font-size: var(--font-caption);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+.coupon-progress-label strong {
+    color: var(--color-brand-strong);
+}
+.report-list {
+    display: grid;
+    gap: 12px;
+}
+.report-card {
+    padding: 16px;
+    background: var(--color-white);
+    border-radius: 16px;
+}
+.report-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 28px;
+}
+.report-meta h3 {
+    min-width: 0;
+}
+.report-meta .report-read {
+    flex-shrink: 0;
+}
+.report-read {
+    font-size: var(--font-caption);
+    font-weight: 650;
+    color: var(--color-brand-strong);
+    background: var(--color-brand-soft);
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+.report-read.is-unread {
+    color: var(--color-text-muted);
+    background: var(--color-surface-muted);
+}
+.report-card h3 {
+    margin: 0;
+    font-size: var(--font-title);
+    letter-spacing: -0.6px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+}
+.report-card p {
+    margin: 6px 0 16px;
+    font-size: var(--font-body);
+    color: var(--color-text-muted);
+}
+.report-action {
+    width: 100%;
+    min-height: 44px;
+    border-radius: 10px;
+    font-size: var(--font-body);
+    font-weight: 700;
+}
+.report-action.primary-button {
+    background: var(--color-brand-soft);
+    color: var(--color-brand-strong);
+}
+.report-action.primary-button:hover:not(:disabled) {
+    background: var(--color-brand-soft);
+    box-shadow: inset 0 0 0 1px var(--color-brand-border);
+}
+.report-action.primary-button:disabled {
+    color: var(--color-text-disabled);
+    background: var(--color-surface-muted);
+}
+.report-action.is-unlocked {
+    color: var(--color-navy);
+    background: var(--color-surface-muted);
+}
+.feedback-help-copy {
+    font-size: var(--font-body);
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
+.feedback-help-copy p {
+    margin: 12px 0;
+}
+.feedback-help-done {
+    width: 100%;
+    margin-top: 14px;
+}
+
+.report-companies {
+    margin: 16px 0;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: clip;
+}
+.report-companies summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: var(--font-body);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    list-style: none;
+}
+.report-companies summary::-webkit-details-marker {
+    display: none;
+}
+.report-companies summary:hover {
+    background: var(--color-surface);
+}
+.report-companies summary:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: -3px;
+}
+.report-companies summary svg {
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-muted);
+    transition: transform 0.18s ease;
+}
+.report-companies[open] summary svg {
+    transform: rotate(180deg);
+}
+.company-count {
+    margin-left: 6px;
+    font-size: var(--font-caption);
+    color: var(--color-text-muted);
+}
+.report-companies ul {
+    margin: 0;
+    padding: 0 12px;
+    list-style: none;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+}
+.report-companies li {
+    padding: 11px 0;
+    font-size: var(--font-body);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+.report-companies li + li {
+    border-top: 1px solid var(--color-border);
+}
+
+/* 목록: 제공된 문서 아이콘과 공통 16px 콘텐츠 여백 */
+.report-document {
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-muted);
+}
+.report-meta h3 {
+    flex: 1;
+}
+.report-companies summary,
+.report-companies ul {
+    padding-left: var(--space-inline);
+    padding-right: var(--space-inline);
+}
+.report-back {
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--color-navy);
+}
+.weekly-main {
+    padding-top: 28px;
+    padding-bottom: 24px;
+    gap: 20px;
+}
+.weekly-main h2 {
+    margin: 0 0 16px;
+    font-size: var(--font-title);
+    line-height: 1.4;
+}
+.weekly-heading p {
+    margin: 0;
+    font-size: var(--font-body);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+.weekly-main .weekly-caption {
+    font-size: var(--font-caption);
+    color: var(--color-text-muted);
+}
+.weekly-summary {
+    padding: 20px var(--space-inline);
+    border-radius: 16px;
+    background: var(--color-white);
+}
+.summary-chart-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 12px;
+}
+.donut-wrap {
+    width: 160px;
+    height: 160px;
+    position: relative;
+    flex-shrink: 0;
+}
+.report-donut {
+    display: block;
+    width: 160px;
+    height: 160px;
+    overflow: visible;
+    stroke: none;
+}
+.report-donut circle {
+    fill: none;
+    stroke-width: 16px;
+    stroke-linecap: butt;
+}
+.donut-track {
+    stroke: var(--color-border);
+}
+.donut-value {
+    stroke: var(--color-brand);
+    transform: rotate(-90deg);
+    transform-origin: 80px 80px;
+    stroke-dasharray: 33.333333 66.666667;
+}
+.donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    pointer-events: none;
+    font-size: var(--font-body);
+}
+.donut-center > span {
+    color: var(--color-text-muted);
+}
+.donut-center strong,
+.chart-legend strong {
+    font-size: var(--font-title);
+    margin-right: 3px;
+}
+.chart-legend {
+    margin: 0;
+    display: grid;
+    gap: 20px;
+    font-size: var(--font-body);
+}
+.chart-legend dt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-text-muted);
+}
+.chart-legend dd {
+    margin: 6px 0 0 14px;
+}
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border);
+    flex-shrink: 0;
+}
+.legend-dot.passed {
+    background: var(--color-brand);
+}
+.reason-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-top: 20px;
+    margin: 20px 0 0;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-size: var(--font-body);
+}
+.reason-summary > div + div {
+    border-left: 1px solid var(--color-border);
+}
+.reason-summary dt {
+    color: var(--color-text-muted);
+}
+.reason-summary dd {
+    margin: 8px 0 0;
+}
+.weekly-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.weekly-section-heading > span {
+    margin-bottom: 16px;
+    color: var(--color-text-muted);
+    font-size: var(--font-caption);
+}
+.weekly-cards {
+    display: grid;
+    gap: 16px;
+}
+.weekly-feedback-card {
+    padding: 16px var(--space-inline);
+    border-radius: 16px;
+    background: var(--color-white);
+}
+.weekly-feedback-card h3 {
+    margin: 4px 0;
+    font-weight: 400;
+    font-size: var(--font-title);
+    line-height: 1.4;
+}
+.weekly-feedback-card p {
+    margin: 0;
+    font-size: var(--font-body);
+    line-height: 1.6;
+}
+.weekly-company {
+    color: var(--color-text-muted);
+}
+.weekly-reason {
+    margin-top: 16px;
+    padding-top: 4px;
+    padding-bottom: 8px;
+    padding-left: var(--space-inline);
+    border-left: 3px solid var(--color-brand-border);
+}
+.weekly-reason-label {
+    display: inline-block;
+    padding: 4px 10px;
+    margin-bottom: 16px;
+    border-radius: 20px;
+    background: var(--color-brand-soft);
+    color: var(--color-brand-strong);
+    font-size: var(--font-caption);
+    font-weight: 700;
+}
+.awaiting-reveal {
+    opacity: 0;
+    transform: translateY(12px);
+}
+.card-reveal {
+    animation: report-card-enter 0.5s ease-out both;
+}
+@keyframes report-card-enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@media (max-width: 365px) {
+    .summary-chart-row {
+        gap: 4px;
+    }
+    .chart-legend {
+        font-size: var(--font-caption);
+    }
+    .report-meta {
+        flex-wrap: wrap;
+    }
+    .report-meta h3 {
+        flex-basis: calc(100% - 28px);
+    }
+    .report-meta .report-read {
+        margin-left: auto;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .awaiting-reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* 집계기간과 보조 설명을 붙여 시안의 문단 간격을 유지합니다. */
+.weekly-heading .weekly-caption {
+    margin-top: 0;
+    line-height: 1.4;
+}
+.weekly-reason .weekly-caption {
+    margin-bottom: 4px;
+}

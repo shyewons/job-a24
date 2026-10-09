@@ -356,8 +356,17 @@ main {
     width: 100%;
     margin: 0 0 4px;
 }
-.details-toggle span {
-    margin-left: 8px;
+/* 선 바깥에는 획 두께만큼만 여백을 두고 글자 중심에 맞춥니다. */
+.details-toggle svg {
+    width: 14px;
+    height: 8px;
+    stroke-width: 1.8;
+    transform: translateY(1px);
+    margin-left: 0;
+    transition: transform 0.2s ease;
+}
+.details-toggle[aria-expanded="true"] svg {
+    transform: translateY(1px) rotate(180deg);
 }
 .company-photo {
     height: 125px;
@@ -458,7 +467,11 @@ main {
     white-space: nowrap;
 }
 .detail-button {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 20px;
     margin-top: 16px;
 }
 .handle {
@@ -1138,6 +1151,12 @@ dialog.menu-dialog {
     object-fit: contain;
     flex-shrink: 0;
 }
+.match-notice .notice-chevron {
+    width: 10px;
+    height: 18px;
+    stroke-width: 1.8;
+    color: var(--color-text-muted);
+}
 .match-notice > span:first-of-type {
     flex: 1;
 }
@@ -1157,14 +1176,14 @@ dialog.menu-dialog {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    font-size: var(--font-caption);
+    font-size: var(--font-body);
 }
 .match-sort {
-    font-size: var(--font-caption);
+    font-size: var(--font-body);
 }
 .match-sort select {
     font: inherit;
-    font-size: var(--font-caption);
+    font-size: var(--font-body);
     color: var(--color-text-muted);
     background: var(--color-clear);
     border: 0;
@@ -1177,13 +1196,20 @@ dialog.menu-dialog {
 .match-filters {
     display: flex;
     gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    padding: 4px;
+    margin: -4px;
 }
 .match-filters button {
-    flex: 1;
-    padding: 10px 2px;
+    flex: 0 0 auto;
+    padding: 10px 16px;
     border-radius: 24px;
     background: var(--color-surface-muted);
-    font-size: var(--font-caption);
+    font-size: var(--font-body);
     font-weight: 700;
     white-space: nowrap;
 }

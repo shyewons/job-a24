@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
  try {
  const p=await b.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});
  const errors=[];p.on('pageerror',e=>errors.push(e.message));
- await p.goto('http://127.0.0.1:4173/matching.html');
+ await p.goto('http://127.0.0.1:4173/html/matching.html');
  assert.equal(await p.locator('.match-card').count(),8);
  for(const [filter,count] of [['progress',4],['success',1],['closed',2],['passed',1],['all',8]]) {await p.locator(`[data-filter="${filter}"]`).click();assert.equal(await p.locator('.match-card').count(),count);}
  await p.locator('#match-notice').click();assert.equal(await p.locator('.match-card').count(),2);

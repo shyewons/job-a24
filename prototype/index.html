@@ -5,10 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#f5f6fa" />
         <title>일자리 탐색 · 작동 시안</title>
-        <link rel="stylesheet" href="styles.css" />
-        <script src="state.js" defer></script>
-        <script src="jobs.js" defer></script>
-        <script src="app.js" defer></script>
+        <link rel="stylesheet" href="css/styles.css" />
+        <script src="js/state.js" defer></script>
+        <script src="js/jobs.js" defer></script>
+        <script src="js/app.js" defer></script>
     </head>
     <body>
         <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -144,17 +144,18 @@
                                             aria-expanded="false"
                                             aria-controls="job-details"
                                         >
-                                            공고 상세보기 <span aria-hidden="true">⌄</span>
+                                            공고 상세보기
+                                            <svg viewBox="0 0 14 8" aria-hidden="true">
+                                                <path d="m1 1 6 6 6-6" />
+                                            </svg>
                                         </button>
                                         <section
                                             class="job-details"
                                             id="job-details"
-                                            aria-labelledby="detail-heading"
+                                            aria-label="공고 상세 내용"
                                             hidden
                                         >
                                             <div class="details-content">
-                                                <span class="eyebrow">ABOUT THIS JOB</span>
-                                                <h3 id="detail-heading">공고 상세</h3>
                                                 <section class="detail-block">
                                                     <h4>이런 일을 해요</h4>
                                                     <p id="detail-description"></p>

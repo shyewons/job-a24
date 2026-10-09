@@ -131,7 +131,7 @@
         attentionOnly = !attentionOnly; filter = 'all';
         document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === 'all'))); render();
     });
-    $('nav-explore').addEventListener('click', () => closeMenu().then(() => { location.href = 'index.html'; }));
+    $('nav-explore').addEventListener('click', () => closeMenu().then(() => { location.href = '../index.html'; }));
     $('nav-matches').addEventListener('click', () => closeMenu().then(() => window.scrollTo({ top: 0, behavior: reduced.matches ? 'instant' : 'smooth' })));
     $('nav-feedback').addEventListener('click', () => closeMenu().then(() => { location.href = 'feedback.html'; }));
     $('close-dialog').addEventListener('click', () => $('info-dialog').close());

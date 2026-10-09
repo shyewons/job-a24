@@ -84,8 +84,12 @@
     detailsAnimation?.cancel();
     detailsAnimation = null;
     $('detail-button').setAttribute('aria-expanded', String(open));
-    const arrow = document.createElement('span'); arrow.setAttribute('aria-hidden', 'true');
-    arrow.textContent = open ? '⌃' : '⌄';
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    arrow.setAttribute('viewBox', '0 0 14 8');
+    arrow.setAttribute('aria-hidden', 'true');
+    const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    chevron.setAttribute('d', 'm1 1 6 6 6-6');
+    arrow.append(chevron);
     $('detail-button').replaceChildren(open ? '상세 닫기 ' : '공고 상세보기 ', arrow);
     if (open) {
       cancelHandleHint();
@@ -353,8 +357,8 @@
     nodes.push(paragraph('현재 체험에서 남긴 기록입니다. 실제 기업 매칭 및 추천 반영은 연결되어 있지 않습니다.', 'dialog-note'));
     openDialog(type === 'applied' ? '나의 매칭 · 지원 기록' : '내가 남긴 피드백', nodes);
   }
-  $('nav-matches').addEventListener('click', () => closeMenu().then(() => { location.href = 'matching.html'; }));
-  $('nav-feedback').addEventListener('click', () => closeMenu().then(() => { location.href = 'feedback.html'; }));
+  $('nav-matches').addEventListener('click', () => closeMenu().then(() => { location.href = 'html/matching.html'; }));
+  $('nav-feedback').addEventListener('click', () => closeMenu().then(() => { location.href = 'html/feedback.html'; }));
   $('nav-explore').addEventListener('click', () => closeMenu().then(() => { if ($('info-dialog').open) $('info-dialog').close(); if (!busy && session.snapshot().face === 'back') cancelFeedback(); window.scrollTo({ top: 0, behavior: reduced.matches ? 'instant' : 'smooth' }); }));
   $('restart').addEventListener('click', () => { if (busy) return; session.restart(); render(); $('toast').classList.remove('visible'); $('push-button').focus({ preventScroll: true }); });
   render();

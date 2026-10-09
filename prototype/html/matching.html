@@ -5,10 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#f5f6fa" />
         <title>나의 매칭 · 잡아24</title>
-        <link rel="stylesheet" href="styles.css" />
-        <script src="state.js" defer></script>
-        <script src="jobs.js" defer></script>
-        <script src="matching.js" defer></script>
+        <link rel="stylesheet" href="../css/styles.css" />
+        <script src="../js/state.js" defer></script>
+        <script src="../js/jobs.js" defer></script>
+        <script src="../js/matching.js" defer></script>
     </head>
     <body>
         <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -63,12 +63,14 @@
             </header>
             <main class="matching-main">
                 <button class="match-notice" id="match-notice">
-                    <img src="assets/page2_1.png" alt="" width="24" height="24" />
+                    <img src="../assets/page2_1.png" alt="" width="24" height="24" />
                     <span
                         ><strong>확인이 필요한 소식</strong
                         ><span id="notice-summary">추가 서류 요청 1건 · 면접 1건</span></span
                     >
-                    <span aria-hidden="true">›</span>
+                    <svg class="notice-chevron" viewBox="0 0 10 18" aria-hidden="true">
+                        <path d="m1 1 8 8-8 8" />
+                    </svg>
                 </button>
                 <div class="match-toolbar">
                     <strong id="match-count" aria-live="polite">총 8건</strong>

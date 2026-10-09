@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#f5f6fa" />
+        <title>주간 이력서 피드백 · 잡아24</title>
+        <link rel="stylesheet" href="../css/styles.css" />
+        <link rel="stylesheet" href="../css/feedback.css" />
+
+        <script src="../js/feedback-report.js" defer></script>
+    </head>
+    <body>
+        <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+                <symbol id="i-back" viewBox="0 0 24 24"><path d="m14 5-7 7 7 7" /></symbol>
+                <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m5 15 7-7 7 7" /></symbol>
+                <symbol id="i-money" viewBox="0 0 24 24">
+                    <rect x="4" y="5" width="17" height="12" rx="2" />
+                    <path d="M17 21H2V9" />
+                    <circle cx="12.5" cy="11" r="3" />
+                </symbol>
+                <symbol id="i-pin" viewBox="0 0 24 24">
+                    <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
+                    <circle cx="12" cy="10" r="2" />
+                </symbol>
+                <symbol id="i-clock" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 6v6l4 3" />
+                </symbol>
+                <symbol id="i-bag" viewBox="0 0 24 24">
+                    <rect x="3" y="7" width="18" height="14" rx="2" />
+                    <path d="M8 7V3h8v4" />
+                </symbol>
+                <symbol id="i-compass" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="m16 8-2 6-6 2 2-6Z" />
+                </symbol>
+                <symbol id="i-heart" viewBox="0 0 24 24">
+                    <path d="M20 5c-3-3-7-1-8 1-1-2-5-4-8-1-5 5 2 11 8 15 6-4 13-10 8-15Z" />
+                </symbol>
+                <symbol id="i-chat" viewBox="0 0 24 24">
+                    <path d="M21 11a9 9 0 0 1-9 9H4l-2 2V11a9.5 9.5 0 0 1 19 0Z" />
+                    <path d="M7 8h9M7 12h6" />
+                </symbol>
+                <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7" /></symbol>
+            </defs>
+        </svg>
+        <div class="app-shell">
+            <header class="header">
+                <a class="report-back icon-button" href="feedback.html" aria-label="피드백 목록으로"
+                    ><svg><use href="#i-back" /></svg
+                ></a>
+                <h1>피드백</h1>
+                <button
+                    id="menu-button"
+                    class="icon-button menu-button"
+                    aria-label="메뉴 열기"
+                    aria-expanded="false"
+                    aria-controls="menu-dialog"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </header>
+            <main class="weekly-main">
+                <section class="weekly-heading">
+                    <h2>주간 이력서 피드백</h2>
+                    <p id="report-period"></p>
+                    <p class="weekly-caption">* 집계 기간에 결과가 확정된 지원 건을 기준</p>
+                </section>
+                <section aria-labelledby="summary-title">
+                    <h2 id="summary-title">주간 요약</h2>
+                    <div class="weekly-summary">
+                        <div class="summary-chart-row">
+                            <div class="donut-wrap">
+                                <svg
+                                    class="report-donut"
+                                    viewBox="0 0 160 160"
+                                    role="img"
+                                    aria-labelledby="chart-title"
+                                >
+                                    <title id="chart-title">
+                                        총 지원 6건 중 서류 통과 2건, 미통과 4건
+                                    </title>
+                                    <circle class="donut-track" cx="80" cy="80" r="62" />
+                                    <circle
+                                        class="donut-value"
+                                        cx="80"
+                                        cy="80"
+                                        r="62"
+                                        pathLength="100"
+                                    />
+                                </svg>
+                                <div class="donut-center" aria-hidden="true">
+                                    <span>총 지원</span>
+                                    <div><strong id="total-count">6</strong>건</div>
+                                </div>
+                            </div>
+                            <dl class="chart-legend">
+                                <div>
+                                    <dt><span class="legend-dot passed"></span>서류 통과</dt>
+                                    <dd><strong>2</strong> 건</dd>
+                                </div>
+                                <div>
+                                    <dt><span class="legend-dot"></span>서류 미통과</dt>
+                                    <dd><strong>4</strong> 건</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <dl class="reason-summary">
+                            <div>
+                                <dt>학력 조건</dt>
+                                <dd><strong>2</strong> 건</dd>
+                            </div>
+                            <div>
+                                <dt>경력 조건</dt>
+                                <dd><strong>1</strong> 건</dd>
+                            </div>
+                            <div>
+                                <dt>기타 사유</dt>
+                                <dd><strong>1</strong> 건</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </section>
+                <section aria-labelledby="detail-title">
+                    <div class="weekly-section-heading">
+                        <h2 id="detail-title">공고별 피드백</h2>
+                        <span>4건</span>
+                    </div>
+                    <div class="weekly-cards" id="weekly-cards"></div>
+                </section>
+                <p class="demo-note">제출용 시안 · 예시 데이터이며 실제 기업의 평가가 아닙니다</p>
+            </main>
+        </div>
+        <dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-title">
+            <aside class="side-panel">
+                <div class="side-panel-heading">
+                    <h2 id="menu-title">메뉴</h2>
+                    <button id="close-menu" class="icon-button" aria-label="메뉴 닫기">×</button>
+                </div>
+                <nav class="side-nav" aria-label="주 메뉴">
+                    <button id="nav-explore">
+                        <svg><use href="#i-compass" /></svg><span>일자리 탐색</span></button
+                    ><button id="nav-matches">
+                        <span class="nav-icon"
+                            ><svg><use href="#i-heart" /></svg
+                            ><span class="nav-badge" id="applied-count" hidden>0</span></span
+                        ><span>나의 매칭</span></button
+                    ><button class="active" aria-current="page" id="nav-feedback">
+                        <svg><use href="#i-chat" /></svg><span>피드백</span>
+                    </button>
+                </nav>
+            </aside>
+        </dialog>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </body>
+</html>

@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const statePath = path.join(__dirname, '../state.js');
+const statePath = path.join(__dirname, '../js/state.js');
 test('session implementation exists', () => assert.ok(fs.existsSync(statePath), 'state.js is not implemented'));
 if (fs.existsSync(statePath)) {
   const { createSession } = require(statePath);

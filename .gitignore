@@ -1,4 +1,18 @@
-# Only prototype is published; other root files stay local.
-/*
-!/prototype/
-!/.gitignore
+# Dependencies
+node_modules/
+
+# Generated output and temporary files
+/output/
+/tmp/
+*.log
+*.pid
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+.aws/
+
+# Operating system files
+.DS_Store
+Thumbs.db
