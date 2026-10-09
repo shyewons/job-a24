@@ -93,7 +93,7 @@ svg {
     z-index: 20;
     background: var(--surface);
     transition: transform 0.2s ease;
-    height: 70px;
+    height: 64px;
     padding: env(safe-area-inset-top, 0px) 18px 0;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -947,9 +947,6 @@ dialog::backdrop {
         min-height: 844px;
         border: 1px solid #fff;
         border-radius: 28px;
-    }
-    .header {
-        height: 72px;
     }
     .intro {
         padding-top: 24px;
