@@ -15,8 +15,8 @@ const assert = require('node:assert/strict');
  await p.setViewportSize({width:390,height:844});await p.screenshot({path:'output/prototype-matching.png',fullPage:true});
  await p.locator('#menu-button').click();await p.locator('#nav-explore').click();await p.waitForURL('**/index.html');
  await p.locator('#pull-button').click();await p.locator('#next-job').click();
- await p.locator('#menu-button').click();await p.locator('#nav-matches').click();await p.waitForURL('**/matching.html');assert.equal(await p.locator('.match-card').count(),9);
+ await p.locator('#menu-button').click();await p.locator('#nav-matches').click();await p.waitForURL('**/matching.html');assert.equal(await p.locator('.match-card').count(),8);
  await p.locator('#menu-button').click();await p.locator('#nav-explore').click();await p.waitForURL('**/index.html');assert.equal(await p.locator('#remaining').innerText(),'남은 공고 5개');
- assert.deepEqual(errors,[]);console.log('PASS: tabs, notice, sort, requests, responsive layout, menu navigation and retained application history');
+ assert.deepEqual(errors,[]);console.log('PASS: tabs, notice, sort, requests, responsive layout, menu navigation and independent sample matching list');
  } finally {await b.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

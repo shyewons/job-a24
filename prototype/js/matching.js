@@ -65,14 +65,7 @@
         { id: 'review2', title: '데이터 분석가', status: 'progress', label: '서류 검토 중', step: 1, updated: 2 },
         { id: 'closed2', title: '서비스 운영 매니저', status: 'closed', label: '공고 마감', action: '공고 다시 보기', updated: 1 }
     ].map(item => ({ company, ...item }));
-    let decisions = [];
-    try { decisions = JSON.parse(sessionStorage.getItem('job-a24-decisions') || '[]'); } catch (_) {}
-    const personal = decisions.filter(d => window.DEMO_JOBS[d.index]).map((d, i) => ({
-        ...window.DEMO_JOBS[d.index], id: `personal-${i}`, status: d.type === 'applied' ? 'progress' : 'passed',
-        label: d.type === 'applied' ? '검토 대기중' : '넘긴 공고', step: d.type === 'applied' ? 0 : undefined,
-        action: d.type === 'applied' ? undefined : '공고 다시 보기', updated: 100 + i, personal: true, reasons: d.reasons
-    }));
-    const items = [...personal, ...samples];
+    const items = samples;
     let filter = 'all', attentionOnly = false;
     const el = (tag, className, text) => { const node = document.createElement(tag); node.className = className; if (text) node.textContent = text; return node; };
     function openInfo(title, paragraphs) {
@@ -99,7 +92,6 @@
             top.append(badges);
             if (item.days) top.append(el('span', 'match-deadline', `마감 D-${item.days}`));
             card.append(top, el('p', 'match-company', item.company), el('h2', '', item.title));
-            if (item.personal) card.append(el('p', 'match-personal', '일자리 탐색에서 남긴 내 기록'));
             if (item.step !== undefined) {
                 const steps = el('ol', 'match-steps');
                 ['지원 완료', '서류 검토', '추가 서류', '면접'].forEach((label, i) => {
@@ -108,7 +100,7 @@
                     if (active) step.setAttribute('aria-current', 'step');
                     const dot = el('span', 'step-dot', done ? '✓' : ''); dot.setAttribute('aria-hidden', 'true');
                     step.append(dot, el('span', 'step-label', label));
-                    const date = done && !item.personal ? (item.dates || ['10.08', '10.10', '10.12', '10.14'])[i] : '';
+                    const date = done ? (item.dates || ['10.08', '10.10', '10.12', '10.14'])[i] : '';
                     step.append(el('span', 'step-date', date)); steps.append(step);
                 });
                 card.append(steps);

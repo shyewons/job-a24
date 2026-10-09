@@ -398,7 +398,7 @@ main {
     color: var(--color-white);
 }
 .company-info h2 {
-    font-size: var(--font-title);
+    font-size: var(--font-body);
     margin: 0 0 3px;
     letter-spacing: -0.6px;
 }
@@ -1262,7 +1262,7 @@ dialog.menu-dialog {
 }
 .match-company {
     margin: 0 0 4px;
-    font-size: var(--font-caption);
+    font-size: var(--font-body);
     color: var(--color-text-muted);
 }
 .match-card h2 {
@@ -1270,11 +1270,6 @@ dialog.menu-dialog {
     font-size: var(--font-title);
     line-height: 1.4;
     letter-spacing: -0.6px;
-}
-.match-personal {
-    font-size: var(--font-caption);
-    color: var(--color-text-muted);
-    margin: 6px 0;
 }
 .match-steps {
     display: flex;
