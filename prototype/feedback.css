@@ -1,0 +1,70 @@
+/* 기존 프로토타입의 팔레트와 18/14/12px 타이포그래피를 공유합니다. */
+.feedback-main { padding-top: 20px; padding-bottom: 28px; gap: 28px; }
+.coupon-card { background: var(--color-white); border-radius: 16px; padding: 20px var(--space-inline); }
+.coupon-top { display: flex; align-items: center; gap: 6px; }
+.coupon-top h2 { font-size: var(--font-body); margin: 0; font-weight: 700; }
+.coupon-help { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; color: var(--color-text-muted); }
+.coupon-help svg { width: 18px; height: 18px; }
+.coupon-help:hover { background: var(--color-surface); }
+.coupon-balance { margin-left: auto; display: flex; align-items: center; gap: 6px; color: var(--color-brand-strong); font-size: var(--font-title); }
+.coupon-balance svg { width: 22px; height: 22px; }
+.coupon-message { font-size: var(--font-body); line-height: 1.7; margin: 18px 0 16px; }
+.coupon-message strong { color: var(--color-brand-strong); }
+.coupon-progress-row { display: flex; align-items: center; gap: 12px; }
+.coupon-progress { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; flex: 1; }
+.coupon-progress span { height: 8px; border-radius: 3px; background: var(--color-surface-muted); }
+.coupon-progress span:nth-child(-n+7) { background: var(--color-brand); }
+.coupon-progress-label { font-size: var(--font-caption); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.coupon-progress-label strong { color: var(--color-brand-strong); }
+.report-list { display: grid; gap: 12px; }
+.report-card { padding: 16px; background: var(--color-white); border-radius: 16px; }
+.report-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; min-height: 28px; }
+.report-icon { color: var(--color-text-muted); width: 22px; height: 22px; }
+.report-read { font-size: var(--font-caption); font-weight: 650; color: var(--color-brand-strong); background: var(--color-brand-soft); border-radius: 20px; padding: 5px 10px; }
+.report-read.is-unread { color: var(--color-text-muted); background: var(--color-surface-muted); }
+.report-card h3 { margin: 0; font-size: var(--font-title); letter-spacing: -.6px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.report-card p { margin: 6px 0 16px; font-size: var(--font-body); color: var(--color-text-muted); }
+.report-action { width: 100%; min-height: 44px; border-radius: 10px; font-size: var(--font-body); font-weight: 700; }
+.report-action.is-unlocked { color: var(--color-navy); background: var(--color-surface-muted); }
+.feedback-help-copy { font-size: var(--font-body); color: var(--color-text-muted); line-height: 1.8; }
+.feedback-help-copy p { margin: 12px 0; }
+.feedback-help-done { width: 100%; margin-top: 14px; }
+
+.report-companies {
+    margin: 16px 0;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: clip;
+}
+.report-companies summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: var(--font-body);
+    font-weight: 650;
+    cursor: pointer;
+    list-style: none;
+}
+.report-companies summary::-webkit-details-marker { display: none; }
+.report-companies summary:hover { background: var(--color-surface); }
+.report-companies summary:focus-visible { outline: 3px solid var(--color-focus); outline-offset: -3px; }
+.report-companies summary svg { width: 18px; height: 18px; color: var(--color-text-muted); transition: transform .18s ease; }
+.report-companies[open] summary svg { transform: rotate(180deg); }
+.company-count { margin-left: 6px; font-size: var(--font-caption); color: var(--color-text-muted); }
+.report-companies ul {
+    margin: 0;
+    padding: 0 12px;
+    list-style: none;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+}
+.report-companies li {
+    padding: 11px 0;
+    font-size: var(--font-body);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+.report-companies li + li { border-top: 1px solid var(--color-border); }

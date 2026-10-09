@@ -28,13 +28,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/zxaq3/.cac
         assert.equal(await page.locator('#menu-dialog').isVisible(), false);
         assert.equal(await page.locator('#menu-button').evaluate(el => el === document.activeElement), true);
         await page.locator('#menu-button').click(); await page.waitForTimeout(300);
-        await page.locator('#nav-matches').click(); await page.locator('#info-dialog').waitFor({ state: 'visible' });
-        assert.equal(await page.locator('#menu-dialog').isVisible(), false);
-        assert.equal(await page.locator('#info-dialog').isVisible(), true);
-        await page.keyboard.press('Escape');
-        await page.locator('#menu-button').click(); await page.waitForTimeout(300);
-        await page.locator('#nav-explore').click(); await page.locator('#menu-dialog').waitFor({ state: 'hidden' });
-        assert.equal(await page.locator('#menu-dialog').isVisible(), false);
+        await page.locator('#nav-matches').click(); await page.waitForURL('**/matching.html');
+        assert.equal(await page.locator('.header h1').innerText(), '나의 매칭');
+        await page.locator('#menu-button').click();
+        await page.locator('#nav-explore').click(); await page.waitForURL('**/index.html');
         await page.locator('#help-button').click();
         assert.equal(await page.locator('#info-dialog').isVisible(), true);
         console.log('PASS: no footer, help next to count, two-thirds sidebar, backdrop dismissal, Escape/focus restoration, preserved menu actions');

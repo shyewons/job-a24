@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#f5f6fa" />
+        <title>나의 매칭 · 잡아24</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="state.js" defer></script>
+        <script src="jobs.js" defer></script>
+        <script src="matching.js" defer></script>
+    </head>
+    <body>
+        <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+                <symbol id="i-back" viewBox="0 0 24 24"><path d="m14 5-7 7 7 7" /></symbol>
+                <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m5 15 7-7 7 7" /></symbol>
+                <symbol id="i-money" viewBox="0 0 24 24">
+                    <rect x="4" y="5" width="17" height="12" rx="2" />
+                    <path d="M17 21H2V9" />
+                    <circle cx="12.5" cy="11" r="3" />
+                </symbol>
+                <symbol id="i-pin" viewBox="0 0 24 24">
+                    <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
+                    <circle cx="12" cy="10" r="2" />
+                </symbol>
+                <symbol id="i-clock" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 6v6l4 3" />
+                </symbol>
+                <symbol id="i-bag" viewBox="0 0 24 24">
+                    <rect x="3" y="7" width="18" height="14" rx="2" />
+                    <path d="M8 7V3h8v4" />
+                </symbol>
+                <symbol id="i-compass" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="m16 8-2 6-6 2 2-6Z" />
+                </symbol>
+                <symbol id="i-heart" viewBox="0 0 24 24">
+                    <path d="M20 5c-3-3-7-1-8 1-1-2-5-4-8-1-5 5 2 11 8 15 6-4 13-10 8-15Z" />
+                </symbol>
+                <symbol id="i-chat" viewBox="0 0 24 24">
+                    <path d="M21 11a9 9 0 0 1-9 9H4l-2 2V11a9.5 9.5 0 0 1 19 0Z" />
+                    <path d="M7 8h9M7 12h6" />
+                </symbol>
+                <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7" /></symbol>
+            </defs>
+        </svg>
+        <div class="app-shell">
+            <header class="header">
+                <h1>나의 매칭</h1>
+                <button
+                    id="menu-button"
+                    class="icon-button menu-button"
+                    aria-label="메뉴 열기"
+                    aria-expanded="false"
+                    aria-controls="menu-dialog"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </header>
+            <main class="matching-main">
+                <button class="match-notice" id="match-notice">
+                    <img src="assets/page2_1.png" alt="" width="24" height="24" />
+                    <span
+                        ><strong>확인이 필요한 소식</strong
+                        ><span id="notice-summary">추가 서류 요청 1건 · 면접 1건</span></span
+                    >
+                    <span aria-hidden="true">›</span>
+                </button>
+                <div class="match-toolbar">
+                    <strong id="match-count" aria-live="polite">총 8건</strong>
+                    <label class="match-sort"
+                        ><span class="sr-only">정렬</span>
+                        <select id="match-sort" aria-label="매칭 정렬">
+                            <option value="recent">최근 업데이트순</option>
+                            <option value="deadline">마감 임박순</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="match-filters" role="group" aria-label="매칭 상태 필터">
+                    <button data-filter="all" aria-pressed="true">전체</button>
+                    <button data-filter="progress" aria-pressed="false">진행 중</button>
+                    <button data-filter="success" aria-pressed="false">매칭 성사</button>
+                    <button data-filter="closed" aria-pressed="false">종료</button>
+                    <button data-filter="passed" aria-pressed="false">넘긴 공고</button>
+                </div>
+                <section id="match-list" class="match-list" aria-label="매칭 공고 목록"></section>
+                <p class="demo-note">
+                    제출용 시안 · 예시 매칭 데이터이며 실제 기업 요청이 아닙니다
+                </p>
+            </main>
+        </div>
+        <dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-title">
+            <aside class="side-panel">
+                <div class="side-panel-heading">
+                    <h2 id="menu-title">메뉴</h2>
+                    <button id="close-menu" class="icon-button" aria-label="메뉴 닫기">×</button>
+                </div>
+                <nav class="side-nav" aria-label="주 메뉴">
+                    <button id="nav-explore">
+                        <svg><use href="#i-compass" /></svg><span>일자리 탐색</span></button
+                    ><button class="active" aria-current="page" id="nav-matches">
+                        <span class="nav-icon"
+                            ><svg><use href="#i-heart" /></svg
+                            ><span class="nav-badge" id="applied-count" hidden>0</span></span
+                        ><span>나의 매칭</span></button
+                    ><button id="nav-feedback">
+                        <svg><use href="#i-chat" /></svg><span>피드백</span>
+                    </button>
+                </nav>
+            </aside>
+        </dialog>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        <dialog id="info-dialog" aria-labelledby="dialog-title">
+            <div class="dialog-header">
+                <h2 id="dialog-title"></h2>
+                <button id="close-dialog" class="icon-button" aria-label="닫기">×</button>
+            </div>
+            <div id="dialog-content"></div>
+            <button id="dialog-done" class="primary-button">확인</button>
+        </dialog>
+        <noscript>이 시안을 체험하려면 브라우저의 JavaScript를 활성화해 주세요.</noscript>
+    </body>
+</html>

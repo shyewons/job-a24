@@ -3,16 +3,6 @@
   const $ = id => document.getElementById(id);
   const jobs = window.DEMO_JOBS;
   const session = window.JobExplorer.createSession(jobs.length);
-  try {
-    const saved = JSON.parse(sessionStorage.getItem('job-a24-decisions') || '[]');
-    for (const d of saved) {
-      if (d.type === 'applied') session.apply(d.index);
-      else if (d.type === 'rejected') { session.openFeedback(); session.reject(d.index, d.reasons, d.detail); }
-    }
-  } catch (_) { /* Storage may be unavailable in local previews. */ }
-  function saveDecisions() {
-    try { sessionStorage.setItem('job-a24-decisions', JSON.stringify(session.snapshot().decisions)); } catch (_) {}
-  }
   const selected = new Set();
   let busy = false, exiting = false, drag = null, toastTimer, nextTimer, hintTimer, detailsAnimation, suppressClickUntil = 0;
   const motion = $('card-motion'), card = $('card'), handle = $('handle');
@@ -188,7 +178,6 @@
     return applied;
   }
   function render() {
-    saveDecisions();
     cancelHandleHint();
     setDetails(false);
     const s = session.snapshot(), done = s.face === 'done';
@@ -233,7 +222,6 @@
     const s = session.snapshot();
     const ok = type === 'applied' ? session.apply(s.index) : session.reject(s.index, [...selected], $('other-detail').value);
     if (!ok) return;
-    saveDecisions();
     cancelHandleHint();
     const wasExpanded = card.classList.contains('details-open');
     setDetails(false);
@@ -330,7 +318,7 @@
   }
   function paragraph(value, className = '') { const p = document.createElement('p'); p.textContent = value; p.className = className; return p; }
   function help() {
-    openDialog('작은 움직임으로, 새로운 시작', [paragraph('↓ 아래로 당기면 아래에서 위로 뒤집힌 뒷면에 “플러팅을 날렸습니다”가 나타나요. 잠시 후 다음 공고로 이동해요.'), paragraph('↑ 위로 밀면 위에서 아래로 카드가 뒤집혀요. 뒷면에서 거절 사유를 클릭하고 완료하면 다음 공고로 넘어가요.'), paragraph('손잡이 위·아래 버튼으로도 조작할 수 있어요. 키보드는 Tab으로 이동하고 Enter로 선택하세요. 손잡이에서는 ↑ / ↓ 키도 사용할 수 있어요.'), paragraph('이 시안의 공고는 가상 데이터입니다. 실제 지원은 전송되지 않으며 이 탭에서 페이지를 이동해도 체험 기록이 유지됩니다.', 'dialog-note')]);
+    openDialog('작은 움직임으로, 새로운 시작', [paragraph('↓ 아래로 당기면 아래에서 위로 뒤집힌 뒷면에 “플러팅을 날렸습니다”가 나타나요. 잠시 후 다음 공고로 이동해요.'), paragraph('↑ 위로 밀면 위에서 아래로 카드가 뒤집혀요. 뒷면에서 거절 사유를 클릭하고 완료하면 다음 공고로 넘어가요.'), paragraph('손잡이 위·아래 버튼으로도 조작할 수 있어요. 키보드는 Tab으로 이동하고 Enter로 선택하세요. 손잡이에서는 ↑ / ↓ 키도 사용할 수 있어요.'), paragraph('이 시안의 공고는 가상 데이터입니다. 실제 지원은 전송되지 않으며 새로고침하면 체험 기록이 초기화됩니다.', 'dialog-note')]);
   }
   $('help-button').addEventListener('click', help);
   $('close-dialog').addEventListener('click', () => $('info-dialog').close());
@@ -353,8 +341,8 @@
     nodes.push(paragraph('현재 체험에서 남긴 기록입니다. 실제 기업 매칭 및 추천 반영은 연결되어 있지 않습니다.', 'dialog-note'));
     openDialog(type === 'applied' ? '나의 매칭 · 지원 기록' : '내가 남긴 피드백', nodes);
   }
-  $('nav-matches').addEventListener('click', () => closeMenu().then(() => { location.href = 'matching.html'; }));
-  $('nav-feedback').addEventListener('click', () => closeMenu().then(() => { location.href = 'feedback.html'; }));
+  $('nav-matches').addEventListener('click', () => closeMenu().then(() => showHistory('applied')));
+  $('nav-feedback').addEventListener('click', () => closeMenu().then(() => showHistory('rejected')));
   $('nav-explore').addEventListener('click', () => closeMenu().then(() => { if ($('info-dialog').open) $('info-dialog').close(); if (!busy && session.snapshot().face === 'back') cancelFeedback(); window.scrollTo({ top: 0, behavior: reduced.matches ? 'instant' : 'smooth' }); }));
   $('restart').addEventListener('click', () => { if (busy) return; session.restart(); render(); $('toast').classList.remove('visible'); $('push-button').focus({ preventScroll: true }); });
   render();
