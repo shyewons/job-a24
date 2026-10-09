@@ -1,4 +1,4 @@
 # Only prototype is published; other root files stay local.
 /*
 !/prototype/
-!/ver1/
+!/.gitignore
