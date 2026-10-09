@@ -50,9 +50,10 @@ const appPath = path.join(__dirname, '../index.html');
     await page.keyboard.press('ArrowDown'); await wait(); await count(3);
     await page.locator('#next-job').click(); await wait();
     await page.locator('#detail-button').click();
-    assert.equal(await page.locator('#info-dialog').isVisible(), true);
-    assert.equal(await page.locator('#info-dialog').getAttribute('aria-labelledby'), 'dialog-title', 'Dialog must expose its visible title to assistive technology');
-    await page.keyboard.press('Escape');
+    await page.locator('#job-details').waitFor({ state: 'visible' });
+    assert.equal(await page.locator('#job-details').isVisible(), true);
+    assert.equal(await page.locator('#info-dialog').isVisible(), false);
+    await page.locator('#detail-button').click(); await wait();
     for (let i = 0; i < 3; i++) { await page.locator('#pull-button').click(); await wait(); await page.locator('#next-job').click(); await wait(); }
     await count(0);
     assert.equal(await page.locator('#complete').isVisible(), true);

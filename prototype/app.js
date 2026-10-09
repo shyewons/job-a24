@@ -4,11 +4,110 @@
   const jobs = window.DEMO_JOBS;
   const session = window.JobExplorer.createSession(jobs.length);
   const selected = new Set();
-  let busy = false, exiting = false, drag = null, toastTimer, nextTimer, hintTimer, suppressClickUntil = 0;
+  let busy = false, exiting = false, drag = null, toastTimer, nextTimer, hintTimer, detailsAnimation, suppressClickUntil = 0;
   const motion = $('card-motion'), card = $('card'), handle = $('handle');
+  const header = document.querySelector('.header');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const duration = () => reduced.matches ? 0 : 360;
   const text = (id, value) => { $(id).textContent = value; };
+
+  let previousScroll = window.scrollY, scrollDistance = 0, scrollFrame = 0;
+  function showHeader() {
+    header.classList.remove('header-hidden');
+    previousScroll = window.scrollY; scrollDistance = 0;
+  }
+  addEventListener('scroll', () => {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(() => {
+      scrollFrame = 0;
+      const y = Math.max(0, Math.min(window.scrollY, document.documentElement.scrollHeight - innerHeight));
+      const delta = y - previousScroll;
+      previousScroll = y;
+      if (y <= 8) { showHeader(); return; }
+      if (!delta) return;
+      scrollDistance = Math.sign(delta) === Math.sign(scrollDistance) ? scrollDistance + delta : delta;
+      if (scrollDistance <= -4) header.classList.remove('header-hidden');
+      else if (scrollDistance >= 8 && y > header.offsetHeight) header.classList.add('header-hidden');
+    });
+  }, { passive: true });
+  header.addEventListener('focusin', showHeader);
+
+  const menu = $('menu-dialog'), panel = menu.querySelector('.side-panel');
+  let menuClosing = null, previousOverflow = '';
+  function closeMenu() {
+    if (!menu.open) return Promise.resolve();
+    if (menuClosing) return menuClosing;
+    const animation = reduced.matches ? null : panel.animate(
+      [{ transform: getComputedStyle(panel).transform }, { transform: 'translateX(100%)' }],
+      { duration: 180, easing: 'ease-in', fill: 'forwards' }
+    );
+    menuClosing = (animation ? animation.finished.catch(() => {}) : Promise.resolve()).then(() => {
+      menu.close(); animation?.cancel(); menuClosing = null;
+    });
+    return menuClosing;
+  }
+  $('menu-button').addEventListener('click', () => {
+    if (busy || menu.open) return;
+    cancelHandleHint(); showHeader();
+    previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    $('menu-button').setAttribute('aria-expanded', 'true');
+    menu.showModal();
+  });
+  $('close-menu').addEventListener('click', closeMenu);
+  menu.addEventListener('click', event => { if (event.target === menu) closeMenu(); });
+  menu.addEventListener('cancel', event => { event.preventDefault(); closeMenu(); });
+  menu.addEventListener('close', () => {
+    document.documentElement.style.overflow = previousOverflow;
+    $('menu-button').setAttribute('aria-expanded', 'false');
+  });
+
+  function revealCard() {
+    const top = window.scrollY + $('card-stage').getBoundingClientRect().top - header.offsetHeight - 16;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
+    showHeader();
+  }
+  function setDetails(open, restore = false) {
+    const details = $('job-details');
+    const startHeight = details.hidden ? 0 : details.getBoundingClientRect().height;
+    const startOpacity = details.hidden ? 0 : Number(getComputedStyle(details).opacity);
+    detailsAnimation?.cancel();
+    detailsAnimation = null;
+    $('detail-button').setAttribute('aria-expanded', String(open));
+    const arrow = document.createElement('span'); arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = open ? '⌃' : '⌄';
+    $('detail-button').replaceChildren(open ? '상세 닫기 ' : '공고 상세보기 ', arrow);
+    if (open) {
+      cancelHandleHint();
+      details.hidden = false; details.inert = false;
+      card.classList.add('details-open');
+      if (!reduced.matches) detailsAnimation = details.animate(
+        [{ height: `${startHeight}px`, opacity: startOpacity }, { height: `${details.scrollHeight}px`, opacity: 1 }],
+        { duration: 260, easing: 'ease-out' }
+      );
+    } else {
+      const finishClose = () => {
+        details.hidden = true; details.inert = false;
+        card.classList.remove('details-open');
+        detailsAnimation = null;
+        if (restore) { revealCard(); $('detail-button').focus({ preventScroll: true }); }
+      };
+      // Internal card changes close immediately; a user's close folds the content away.
+      if (restore && !reduced.matches && startHeight > 0) {
+        $('detail-button').focus({ preventScroll: true });
+        details.inert = true;
+        const animation = details.animate(
+          [{ height: `${startHeight}px`, opacity: startOpacity }, { height: '0px', opacity: 0 }],
+          { duration: 260, easing: 'ease-in-out', fill: 'forwards' }
+        );
+        detailsAnimation = animation;
+        animation.onfinish = () => {
+          if (detailsAnimation !== animation) return;
+          finishClose(); animation.cancel();
+        };
+      } else finishClose();
+    }
+  }
 
   function cancelHandleHint() {
     clearTimeout(hintTimer);
@@ -80,6 +179,7 @@
   }
   function render() {
     cancelHandleHint();
+    setDetails(false);
     const s = session.snapshot(), done = s.face === 'done';
     const applied = updateCounts();
     $('explorer').hidden = done; $('complete').hidden = !done;
@@ -93,6 +193,12 @@
       $('complete').focus({ preventScroll: true }); return;
     }
     const job = jobs[s.index];
+    text('detail-description', job.description);
+    text('detail-company', `${job.company} · ${job.industry}`);
+    $('detail-facts').replaceChildren(...[['급여', job.salary], ['위치', job.location], ['근무 시간', job.hours], ['경력', job.career]].map(([label, value]) => {
+      const row = document.createElement('div'), term = document.createElement('dt'), description = document.createElement('dd');
+      term.textContent = label; description.textContent = value; row.append(term, description); return row;
+    }));
     for (const [id, key] of Object.entries({ 'company-name': 'company', 'company-industry': 'industry', 'job-title': 'title', salary: 'salary', location: 'location', hours: 'hours', career: 'career', deadline: 'deadline' })) text(id, job[key]);
     $('tags').replaceChildren(...job.tags.map(tag => { const el = document.createElement('span'); el.className = 'tag'; el.textContent = '#' + tag; return el; }));
     resetFeedback(); setFace('front'); scheduleHandleHint();
@@ -100,7 +206,10 @@
   function openFeedback() {
     if (busy || !session.openFeedback()) return;
     cancelHandleHint();
+    const wasExpanded = card.classList.contains('details-open');
+    setDetails(false);
     resetFeedback(); setFace('back', true);
+    if (wasExpanded) revealCard();
   }
   function cancelFeedback() {
     if (busy || !session.cancelFeedback()) return;
@@ -114,11 +223,14 @@
     const ok = type === 'applied' ? session.apply(s.index) : session.reject(s.index, [...selected], $('other-detail').value);
     if (!ok) return;
     cancelHandleHint();
+    const wasExpanded = card.classList.contains('details-open');
+    setDetails(false);
     busy = true; updateSelection(); updateCounts();
     if (type === 'applied') {
       // Show the confirmation on a real back face before retiring the card.
       clearTimeout(toastTimer); $('toast').classList.remove('visible');
       resetFeedback(); setFace('applied', true);
+      if (wasExpanded) revealCard();
       text('next-job', session.snapshot().face === 'done' ? '탐색 결과 보기' : '다음 공고 보기');
       nextTimer = setTimeout(nextJob, reduced.matches ? 1600 : 2200);
     } else {
@@ -164,6 +276,7 @@
   }
   function startDrag(e) {
     if (busy || drag || session.snapshot().face !== 'front' || !e.isPrimary || e.button !== 0) return;
+    if (e.currentTarget === $('card-front') && card.classList.contains('details-open')) return;
     if (e.target.closest('button') && e.target.closest('button') !== $('grip')) return;
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, dy: 0, target: e.currentTarget };
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -207,14 +320,14 @@
   function help() {
     openDialog('작은 움직임으로, 새로운 시작', [paragraph('↓ 아래로 당기면 아래에서 위로 뒤집힌 뒷면에 “플러팅을 날렸습니다”가 나타나요. 잠시 후 다음 공고로 이동해요.'), paragraph('↑ 위로 밀면 위에서 아래로 카드가 뒤집혀요. 뒷면에서 거절 사유를 클릭하고 완료하면 다음 공고로 넘어가요.'), paragraph('손잡이 위·아래 버튼으로도 조작할 수 있어요. 키보드는 Tab으로 이동하고 Enter로 선택하세요. 손잡이에서는 ↑ / ↓ 키도 사용할 수 있어요.'), paragraph('이 시안의 공고는 가상 데이터입니다. 실제 지원은 전송되지 않으며 새로고침하면 체험 기록이 초기화됩니다.', 'dialog-note')]);
   }
-  $('help-button').addEventListener('click', help); $('back-button').addEventListener('click', help);
+  $('help-button').addEventListener('click', help);
   $('close-dialog').addEventListener('click', () => $('info-dialog').close());
   $('dialog-done').addEventListener('click', () => $('info-dialog').close());
   $('info-dialog').addEventListener('click', e => { if (e.target === $('info-dialog')) { const r = e.target.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.target.close(); } });
   $('detail-button').addEventListener('click', () => {
-    const job = jobs[session.snapshot().index]; if (!job) return;
-    const heading = document.createElement('h3'); heading.textContent = job.title;
-    openDialog('공고 상세보기', [paragraph(job.company + ' · ' + job.industry), heading, paragraph(job.description), paragraph(`${job.salary} / ${job.location}`), paragraph(`${job.hours} / ${job.career}`), paragraph('체험을 위한 가상 공고입니다.', 'dialog-note')]);
+    if (busy || session.snapshot().face !== 'front') return;
+    const open = $('detail-button').getAttribute('aria-expanded') !== 'true';
+    setDetails(open, !open);
   });
   function showHistory(type) {
     const decisions = session.snapshot().decisions.filter(d => d.type === type);
@@ -228,9 +341,9 @@
     nodes.push(paragraph('현재 체험에서 남긴 기록입니다. 실제 기업 매칭 및 추천 반영은 연결되어 있지 않습니다.', 'dialog-note'));
     openDialog(type === 'applied' ? '나의 매칭 · 지원 기록' : '내가 남긴 피드백', nodes);
   }
-  $('nav-matches').addEventListener('click', () => showHistory('applied'));
-  $('nav-feedback').addEventListener('click', () => showHistory('rejected'));
-  $('nav-explore').addEventListener('click', () => { if ($('info-dialog').open) $('info-dialog').close(); if (!busy && session.snapshot().face === 'back') cancelFeedback(); window.scrollTo({ top: 0, behavior: reduced.matches ? 'instant' : 'smooth' }); });
+  $('nav-matches').addEventListener('click', () => closeMenu().then(() => showHistory('applied')));
+  $('nav-feedback').addEventListener('click', () => closeMenu().then(() => showHistory('rejected')));
+  $('nav-explore').addEventListener('click', () => closeMenu().then(() => { if ($('info-dialog').open) $('info-dialog').close(); if (!busy && session.snapshot().face === 'back') cancelFeedback(); window.scrollTo({ top: 0, behavior: reduced.matches ? 'instant' : 'smooth' }); }));
   $('restart').addEventListener('click', () => { if (busy) return; session.restart(); render(); $('toast').classList.remove('visible'); $('push-button').focus({ preventScroll: true }); });
   render();
 })();

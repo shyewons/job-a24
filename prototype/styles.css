@@ -13,6 +13,9 @@
     font-synthesis: none;
     background: #e9edf3;
 }
+html {
+    scroll-padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
 * {
     box-sizing: border-box;
 }
@@ -74,16 +77,22 @@ svg {
     border: 0;
 }
 .app-shell {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     max-width: 430px;
     margin: 0 auto;
     background: var(--surface);
     min-height: 100svh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: clip;
     box-shadow: 0 16px 80px #21345112;
 }
 .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--surface);
+    transition: transform 0.2s ease;
     height: 70px;
     padding: env(safe-area-inset-top, 0px) 18px 0;
     display: grid;
@@ -92,7 +101,15 @@ svg {
     border-bottom: 1px solid #e8ebf180;
     flex-shrink: 0;
 }
+.header.header-hidden {
+    transform: translateY(-110%);
+    pointer-events: none;
+}
+.header:focus-within {
+    transform: translateY(0);
+}
 .header h1 {
+    grid-column: 2;
     font-size: 17px;
     letter-spacing: -0.6px;
     margin: 0;
@@ -109,10 +126,8 @@ svg {
 .icon-button:hover {
     background: #e8ecf3;
 }
-.header .icon-button {
-    margin-left: -9px;
-}
-.header .help-button {
+.header .menu-button {
+    grid-column: 3;
     justify-self: end;
 }
 .remaining {
@@ -127,7 +142,7 @@ svg {
 }
 main {
     flex: 1;
-    padding: 0 18px;
+    padding: 0 16px;
     display: flex;
     flex-direction: column;
 }
@@ -233,6 +248,68 @@ main {
 .card-front {
     touch-action: pan-x;
 }
+.card.details-open .card-front {
+    touch-action: pan-y;
+}
+.job-details {
+    overflow: hidden;
+}
+.details-content {
+    margin-top: 20px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+}
+.details-content h3 {
+    margin: 8px 0 26px;
+    font-size: 20px;
+    letter-spacing: -0.6px;
+}
+.detail-block {
+    margin-bottom: 26px;
+}
+.detail-block h4 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    letter-spacing: -0.3px;
+}
+.detail-block p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.85;
+    overflow-wrap: anywhere;
+}
+.detail-facts {
+    margin: 0;
+    padding: 4px 14px;
+    border-radius: 12px;
+    background: var(--surface);
+    font-size: 12px;
+    line-height: 1.7;
+}
+.detail-facts > div {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px 0;
+}
+.detail-facts > div + div {
+    border-top: 1px solid var(--line);
+}
+.detail-facts dt {
+    color: var(--muted);
+}
+.detail-facts dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+.details-toggle {
+    width: 100%;
+    margin: 0 0 4px;
+}
+.details-toggle span {
+    margin-left: 8px;
+}
 .company-photo {
     height: 125px;
     position: relative;
@@ -268,12 +345,12 @@ main {
     letter-spacing: -0.6px;
 }
 .company-info p {
-    font-size: 11px;
+    font-size: 12px;
     margin: 0;
     color: #dde3eb;
 }
 .company-info > span {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 750;
     background: #f5f6fa;
     color: #26354b;
@@ -282,13 +359,13 @@ main {
     border-radius: 20px;
 }
 .job-body {
-    padding: 18px 19px 12px;
+    padding: 16px 16px;
 }
 .job-body h2 {
     font-size: 19px;
     line-height: 1.4;
     letter-spacing: -0.8px;
-    margin: 0 0 14px;
+    margin: 0 0 16px;
     font-weight: 800;
     min-height: 27px;
 }
@@ -313,7 +390,7 @@ main {
 }
 .conditions dd {
     margin: 0;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.4;
     color: #3b4c65;
     letter-spacing: -0.25px;
@@ -327,20 +404,13 @@ main {
     background: #f5f6f8;
     color: #59657a;
     border-radius: 8px;
-    font-size: 10px;
+    font-size: 12px;
     padding: 6px 8px;
     white-space: nowrap;
 }
 .detail-button {
-    font-size: 11px;
-    font-weight: 750;
     display: block;
-    margin: 7px 0 0 auto;
-    padding: 6px 0 6px 10px;
-}
-.detail-button span {
-    margin-left: 6px;
-    color: #8290a4;
+    margin-top: 16px;
 }
 .handle {
     width: 128px;
@@ -362,7 +432,7 @@ main {
     align-items: center;
     justify-content: center;
     gap: 3px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 750;
     letter-spacing: -0.3px;
 }
@@ -445,7 +515,7 @@ main {
     font-weight: 700;
 }
 .gesture-hint span {
-    font-size: 10px;
+    font-size: 12px;
     color: #919aaa;
 }
 .gesture-indicator {
@@ -646,30 +716,39 @@ textarea {
     border-radius: 50%;
     margin: 0 5px 1px 0;
 }
-.bottom-nav {
-    display: flex;
-    background: #fff;
-    border-top: 1px solid #e5e8ee;
-    padding: 13px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-    flex-shrink: 0;
-}
-.bottom-nav button {
+.explore-tools {
     display: flex;
     align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.intro {
+    gap: 10px;
+}
+.side-nav {
+    display: flex;
     flex-direction: column;
-    gap: 7px;
-    flex: 1;
-    font-size: 11px;
-    color: #7e8694;
-    min-height: 44px;
+    gap: 8px;
+    padding: 8px 16px;
 }
-.bottom-nav button.active {
+.side-nav button {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 54px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 14px;
+    color: var(--muted);
+}
+.side-nav button:hover {
+    background: var(--surface);
+}
+.side-nav button.active {
     color: var(--coral);
+    background: var(--coral-soft);
     font-weight: 700;
-}
-.bottom-nav svg {
-    width: 23px;
-    height: 23px;
 }
 .nav-icon {
     position: relative;
@@ -968,14 +1047,63 @@ dialog::backdrop {
     color: #8b95a6;
 }
 
-.wrap {
-    display: flex;
-    align-items: baseline;
-}
 /* Only the visible face sets the height; inactive faces overlay it for the flip. */
 .card[data-face="front"] > .card-front,
 .card[data-face="back"] > .card-back,
 .card[data-face="applied"] > .card-success {
     position: relative;
     inset: auto;
+}
+
+/* Native modal provides focus containment and keeps the page beneath inert. */
+dialog.menu-dialog {
+    position: fixed;
+    inset: 0 auto 0 50%;
+    transform: translateX(-50%);
+    width: min(100%, 430px);
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    /* Prevent autofocus from scrolling the off-screen panel during its slide. */
+    overflow: clip;
+}
+dialog.menu-dialog::backdrop {
+    background: rgb(0 0 0 / 45%);
+    backdrop-filter: none;
+}
+.side-panel {
+    width: 66.666667%;
+    height: 100%;
+    margin-left: auto;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+    background: #fff;
+    box-shadow: -8px 0 30px #00000018;
+    overflow-y: auto;
+}
+.menu-dialog[open] .side-panel {
+    animation: menu-enter 0.22s ease-out;
+}
+.side-panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 16px 20px 24px;
+}
+.side-panel-heading h2 {
+    margin: 0;
+    font-size: 19px;
+}
+@keyframes menu-enter {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
 }

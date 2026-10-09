@@ -12,11 +12,11 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'C:/Users/zxaq3/.cac
                 const card = document.querySelector('#card');
                 const front = document.querySelector('#card-front');
                 const body = document.querySelector('.job-body');
-                const wrap = document.querySelector('.wrap');
+                const footer = document.querySelector('#detail-button');
                 return {
                     height: card.offsetHeight,
-                    gap: front.getBoundingClientRect().bottom - wrap.getBoundingClientRect().bottom,
-                    padding: parseFloat(getComputedStyle(body).paddingBottom),
+                    gap: front.getBoundingClientRect().bottom - footer.getBoundingClientRect().bottom,
+                    padding: parseFloat(getComputedStyle(body).paddingBottom) + parseFloat(getComputedStyle(footer).marginBottom),
                     handleGap: document.querySelector('#handle').getBoundingClientRect().top - card.getBoundingClientRect().bottom,
                     stackHeight: document.querySelector('.stack-one').offsetHeight,
                     overflow: document.documentElement.scrollWidth > innerWidth,
