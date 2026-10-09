@@ -13,7 +13,9 @@
 
 ## 실행
 
-`prototype` 폴더에서 실행합니다.
+`prototype/index.html`을 브라우저에서 바로 열면 실행됩니다. 별도 설치나 빌드는 필요하지 않습니다.
+
+로컬 서버로 확인하려면 `prototype` 폴더에서 실행합니다.
 
 ```sh
 python -m http.server 4173
