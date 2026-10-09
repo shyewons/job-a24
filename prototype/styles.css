@@ -110,10 +110,23 @@ svg {
 }
 .header h1 {
     grid-column: 2;
-    font-size: 17px;
+    font-size: 18px;
     letter-spacing: -0.6px;
     margin: 0;
     font-weight: 750;
+}
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+.header-logo {
+    display: block;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 .icon-button {
     width: 40px;
