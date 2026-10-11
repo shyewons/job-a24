@@ -168,8 +168,16 @@
     color: var(--color-flirt-heart);
 }
 
-.card-success .success-mark svg {
-    width: 40px;
+.header-wordmark {
+    display: block;
+    width: 120px;
     height: 40px;
-    fill: currentColor;
+    object-fit: contain;
+}
+
+.card-success .success-handshake {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
 }
