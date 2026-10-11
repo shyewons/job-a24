@@ -1,6 +1,8 @@
 /* 메인 스타일: 비슷한 색상을 공통 팔레트로 통합한 버전입니다.
    컬러 통합 전 버전은 프로젝트 루트의 ver1 폴더에 보관합니다. */
 :root {
+    /* 로고 색상: 이 값만 바꾸고 저장한 뒤 브라우저를 새로고침하세요. */
+    --color-logo: #ff3f73;
     /* 제목·본문·사진 바탕·토스트: 기존의 여러 진한 남색 통합 */
     --color-navy: #213451;
     /* 주요 버튼·조건 아이콘·선택 표시·안내 점 */
@@ -161,7 +163,8 @@ svg {
     display: block;
     width: 32px;
     height: 32px;
-    object-fit: contain;
+    color: var(--color-logo);
+    stroke: none;
     flex-shrink: 0;
 }
 .icon-button {
@@ -184,7 +187,7 @@ svg {
     font-size: var(--font-caption);
     font-weight: 650;
     color: var(--color-text-muted);
-    padding: 7px 8px;
+    padding: 7px 12px;
     background: var(--color-surface-muted);
     border-radius: 20px;
     flex-shrink: 0;

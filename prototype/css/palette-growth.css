@@ -1,0 +1,165 @@
+/* 성장형 연두 팔레트 — 기존 styles.css와 화면별 CSS 다음에 연결합니다.
+   색상 변경은 이 파일에서 관리합니다. 이 파일의 link를 제거하면 기존 색상으로 돌아갑니다. */
+:root {
+    --color-brand: #a8cf65;
+    --color-brand-hover: #96be53;
+    --color-brand-soft: #edf5df;
+    --color-brand-strong: #4b6b2d;
+    --color-brand-border: var(--color-brand);
+    --color-logo: var(--color-brand);
+
+    --color-navy: #263522;
+    --color-on-brand: var(--color-navy);
+    --color-white: #ffffff;
+    --color-surface: #fafafa;
+    --color-surface-muted: var(--color-brand-soft);
+    --color-border: #dce5d1;
+    --color-text-muted: #687460;
+    --color-text-disabled: #687460;
+
+    --color-accent: #5b4b8a;
+    --color-accent-soft: #eeeaf6;
+    --color-focus: var(--color-accent);
+    --color-detail-surface: #f0f0f0;
+    --color-detail-hover: #e5e5e5;
+    --color-detail-text: #555555;
+}
+
+/* 상세보기는 중립 회색으로 구분해 연두색 핸들이 돋보이도록 합니다. */
+.details-toggle {
+    background: var(--color-detail-surface);
+    color: var(--color-detail-text);
+}
+
+.details-toggle:hover {
+    background: var(--color-detail-hover);
+}
+
+/* 밝은 연두 바탕 위에는 흰색 대신 짙은 글자·아이콘을 사용합니다. */
+.pull-button,
+.primary-button,
+.gesture-indicator.apply,
+.match-filters button[aria-pressed="true"],
+.step-dot {
+    color: var(--color-on-brand);
+}
+
+.pull-button:hover,
+.primary-button:hover:not(:disabled) {
+    background: var(--color-brand-hover);
+}
+
+/* 밝은 바탕 위의 작은 글자와 기능 아이콘은 진한 초록으로 표시합니다. */
+.conditions dt,
+.reason-check,
+.reason[aria-pressed="true"] svg,
+.other-field label span,
+.side-nav button.active,
+.complete-icon,
+.success-mark {
+    color: var(--color-brand-strong);
+}
+
+/* 보라는 작은 알림·정보 배지에만 사용합니다. */
+.nav-badge {
+    background: var(--color-accent);
+    color: var(--color-white);
+}
+
+.report-read:not(.is-unread) {
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+}
+
+/* 미열람은 보라 배지, 쿠폰 사용은 메인 연두 버튼으로 강조합니다. */
+.report-read.is-unread {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border: 1px solid var(--color-accent);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.report-action.primary-button:not(:disabled) {
+    background: var(--color-brand);
+    color: var(--color-on-brand);
+}
+
+.report-action.primary-button:hover:not(:disabled) {
+    background: var(--color-brand-hover);
+}
+
+.report-action.is-unlocked,
+.report-action.primary-button:disabled {
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+}
+
+/* 소식 아이콘과 진행 상태는 초록, 새 소식 배지는 보라로 구분합니다. */
+.matching-main {
+    --color-match-neutral: #eef0f3;
+    --color-match-neutral-text: #6b7280;
+    --color-match-success: #287a50;
+}
+
+.match-notice,
+.match-filters button[aria-pressed="false"] {
+    background: var(--color-match-neutral);
+}
+
+.match-notice {
+    border: 1px solid #ddd;
+}
+
+.match-notice .notice-bell {
+    color: var(--color-brand-strong);
+}
+
+.match-new {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+}
+
+/* 종료 상태와 보조 버튼은 회색, 매칭 성사는 선명한 초록으로 강조합니다. */
+.match-neutral,
+.match-action.secondary-button {
+    background: var(--color-match-neutral);
+    color: var(--color-match-neutral-text);
+}
+
+.match-action.secondary-button:hover {
+    background: #e2e5e9;
+}
+
+.match-success {
+    background: var(--color-match-success);
+    color: var(--color-white);
+}
+
+/* 플러팅 완료 화면은 맑은 핑크 팔레트를 사용합니다. */
+.card-success {
+    --color-brand: var(--color-flirt-heart);
+    --color-brand-hover: #c92f68;
+    --color-brand-strong: #cc356b;
+    --color-brand-soft: #fff0f5;
+    --color-on-brand: #ffffff;
+    --color-navy: #422d36;
+    --color-text-muted: #82717a;
+    --color-flirt-heart: #dc3d77;
+    color: var(--color-navy);
+}
+
+.card-success .success-mark {
+    color: var(--color-flirt-heart);
+}
+
+.card-success .success-mark svg {
+    width: 40px;
+    height: 40px;
+    fill: currentColor;
+}

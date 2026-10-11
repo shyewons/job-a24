@@ -54,7 +54,7 @@
     $('menu-button').setAttribute('aria-expanded', 'false');
   });
 
-    const company = '(주)넥스트커머스';
+    const company = '(주)모아별테크';
     const samples = [
         { id: 'docs', title: '핀테크 웹 프론트엔드 개발자', status: 'progress', label: '추가 서류 요청', step: 2, action: '요청 확인하기', days: 7, dates: ['10.07', '10.09'], fresh: true, updated: 8 },
         { id: 'interview', title: '서비스 기획자', status: 'progress', label: '면접', step: 3, action: '면접 제안 확인', days: 2, dates: ['10.02', '10.05', '10.08'], fresh: true, updated: 7 },
@@ -88,7 +88,7 @@
             const top = el('div', 'match-card-top');
             const badges = el('div', 'match-badges');
             if (item.fresh) badges.append(el('span', 'match-badge match-new', 'NEW'));
-            badges.append(el('span', `match-badge ${item.status === 'passed' || item.status === 'closed' ? 'match-neutral' : ''}`, item.label));
+            badges.append(el('span', `match-badge ${item.status === 'passed' || item.status === 'closed' ? 'match-neutral' : item.status === 'success' ? 'match-success' : ''}`, item.label));
             top.append(badges);
             if (item.days) top.append(el('span', 'match-deadline', `마감 D-${item.days}`));
             card.append(top, el('p', 'match-company', item.company), el('h2', '', item.title));
@@ -106,7 +106,7 @@
                 card.append(steps);
             }
             if (item.action) {
-                const button = el('button', `match-action ${item.id === 'docs' ? 'primary-button' : item.id === 'interview' ? 'match-action-accent' : 'secondary-button'}`, item.action);
+                const button = el('button', `match-action ${item.id === 'docs' || item.id === 'interview' ? 'primary-button' : 'secondary-button'}`, item.action);
                 button.addEventListener('click', () => showItem(item)); card.append(button);
             }
             return card;
