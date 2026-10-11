@@ -25,6 +25,16 @@
     --color-detail-text: #555555;
 }
 
+/* 바깥 배경은 브랜드 색상과 분리해 이전의 은은한 핑크·회색을 유지합니다. */
+@media (min-width: 700px) {
+    body {
+        background:
+            radial-gradient(ellipse at 20% 20%, #fff0f3, transparent 45%),
+            radial-gradient(ellipse at 90% 80%, #e9edf3, transparent 55%),
+            #e9edf3;
+    }
+}
+
 /* 상세보기는 중립 회색으로 구분해 연두색 핸들이 돋보이도록 합니다. */
 .details-toggle {
     background: var(--color-detail-surface);
